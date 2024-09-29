@@ -1,0 +1,31 @@
+services:
+  my_app:
+    build: .
+    container_name: flask_app
+    ports:
+      - 80:80
+    networks:
+    - techpronet
+    depends_on: 
+      - database
+    restart: always
+
+
+  database:
+    image: mysql: 5.7
+    container_name: mysql_db
+    environment: 
+    MYSQL_ROOT_PASSWORD: 1234
+    MYSQL_DATABASE: bookstore_db
+    MYSQL_USER: techproed
+    MYSQL_PASSWORD: techpro1234
+  networks:
+    - techpronet
+  volumes:
+    - techprovol: /var/lib/mysql
+
+volumes:
+  techprovol: 
+
+network:
+  techpronet:
