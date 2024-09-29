@@ -3,7 +3,7 @@ services:
     build: .
     container_name: flask_app
     ports:
-      - "80:80"  # Enclose port mapping in quotes
+      - "80:80"
     networks:
       - techpronet
     depends_on:
@@ -11,7 +11,7 @@ services:
     restart: always
 
   database:
-    image: mysql:5.7  # Remove the space before the version number
+    image: mysql:5.7
     container_name: mysql_db
     environment:
       MYSQL_ROOT_PASSWORD: 1234
@@ -21,11 +21,12 @@ services:
     networks:
       - techpronet
     volumes:
-      - techprovol:/var/lib/mysql  # Remove space before the colon
+      - techprovol:/var/lib/mysql
 
 volumes:
-  techprovol:  # Ensure proper indentation
+  techprovol:
 
 networks:
-  techpronet:  # Correct the key from "network" to "networks"
+  techpronet:
+
 
