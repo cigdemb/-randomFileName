@@ -1,18 +1,19 @@
+version: '3.8'  # Specify the version of Docker Compose
+
 services:
- services:
   my_app:
     build: .
     container_name: flask_app
     ports:
-      - "80:80"
+      - "80:80"  # Enclose port mapping in quotes
     networks:
       - techpronet
-    depends_on: 
+    depends_on:
       - database
     restart: always
 
   database:
-    image: mysql:5.7
+    image: mysql:5.7  # Remove the space before the version number
     container_name: mysql_db
     environment:
       MYSQL_ROOT_PASSWORD: 1234
@@ -22,10 +23,11 @@ services:
     networks:
       - techpronet
     volumes:
-      - techprovol:/var/lib/mysql
+      - techprovol:/var/lib/mysql  # Remove space before the colon
 
 volumes:
-  techprovol: 
+  techprovol:  # Ensure proper indentation
 
 networks:
-  techpronet:
+  techpronet:  # Correct the key from "network" to "networks"
+
