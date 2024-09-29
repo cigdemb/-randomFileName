@@ -41,7 +41,7 @@ resource "aws_instance" "tf-docker-ec2" {
     git clone https://github.com/cigdemb/Bookstore_Python_API.git
     cd /home/ec2-user/Bookstore_Python_API
     docker-compose up -d
-  EOF
+    EOF
 }
 
 resource "aws_security_group" "allow_ssh" {
