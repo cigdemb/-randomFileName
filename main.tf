@@ -25,24 +25,37 @@ resource "aws_instance" "tf-docker-ec2" {
     Name = "Bookstore Web Server"
   }
 
-  user_data = <<-EOF
-    #! /bin/bash
+ user_data = <<-EOF
+    #!/bin/bash
+    set -e
+    exec > >(tee /var/log/user-data.log|logger -t user-data) 2>&1
+
+    echo "Starting user data script"
+
     yum update -y
+    echo "Installed updates"
+
     yum install docker git -y
+    echo "Installed Docker and Git"
+
     systemctl start docker
     systemctl enable docker
     usermod -aG docker ec2-user
-    newgrp docker
+    echo "Docker started and user added to docker group"
 
     curl -SL https://github.com/docker/compose/releases/download/v2.29.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
+    echo "Docker Compose installed"
 
     cd /home/ec2-user
     git clone https://github.com/cigdemb/Bookstore_Python_API.git
+    echo "Cloned repository"
+
     cd /home/ec2-user/Bookstore_Python_API
     docker-compose up -d
-    EOF
-}
+    echo "Docker Compose started"
+EOF
+
 
 resource "aws_security_group" "allow_ssh" {
   name        = "${local.user}-docker-instance-sg"
