@@ -21,22 +21,33 @@ cursor = connection.cursor()
 # Create books table within sqlite db and populate with sample data
 # Execute the code below only once.
 def init_bookstore_db():
-    drop_table = 'DROP TABLE IF EXISTS bookstore_db.books;'
-    books_table = """
-    CREATE TABLE bookstore_db.books(
-    book_id INT NOT NULL AUTO_INCREMENT,
-    title VARCHAR(100) NOT NULL,
-    author VARCHAR(100),
-    is_sold BOOLEAN NOT NULL DEFAULT 0,
-    PRIMARY KEY (book_id)
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-    """
-    data = """
-    INSERT INTO bookstore_db.books (title, author, is_sold)
-    VALUES
-        ("Where the Crawdads Sing", "Delia Owens", 1 ),
-        ("The Vanishing Half: A Novel", "Brit Bennett", 0),
-        ("1st Case", "James Patterson, Chris Tebbetts", 0);
+        # Create the 'books' table only if it does not exist
+        books_table = """
+        CREATE TABLE IF NOT EXISTS books(
+            book_id INT NOT NULL AUTO_INCREMENT,
+            title VARCHAR(100) NOT NULL,
+            author VARCHAR(100),
+            is_sold BOOLEAN NOT NULL DEFAULT 0,
+            PRIMARY KEY (book_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        """
+        cursor.execute(books_table)
+        # Insert initial data if necessary (You can add logic to check if it's empty)
+        cursor.execute("SELECT COUNT(*) FROM books;")
+        count = cursor.fetchone()[0]
+        if count == 0:
+            data = """
+            INSERT INTO books (title, author, is_sold)
+            VALUES
+                ("Where the Crawdads Sing", "Delia Owens", 1),
+                ("The Vanishing Half: A Novel", "Brit Bennett", 0),
+                ("1st Case", "James Patterson, Chris Tebbetts", 0);
+            """
+            cursor.execute(data)
+            connection.commit()
+            print("Database initialized with sample data.")
+        else:
+            print("Data already exists, skipping initialization.")
     """
     cursor.execute(drop_table)
     cursor.execute(books_table)
